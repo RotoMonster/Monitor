@@ -35,6 +35,11 @@ public class MainViewModel : ViewModelBase
                 $"{settings.TwitterApi.BaseUrl.TrimEnd('/')}/health")
         };
 
+        if (settings.ProjectionTracking.Enabled)
+        {
+            checks.Add(new ProjectionTrackingCheck(http, settings.ProjectionTracking));
+        }
+
         // Restore anything that was paused when we last shut down.
         foreach (var check in checks)
         {

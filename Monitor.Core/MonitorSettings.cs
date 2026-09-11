@@ -5,6 +5,8 @@ public class MonitorSettings
     public TwitterApiSettings TwitterApi { get; set; } = new();
 
     public AlertSettings Alerts { get; set; } = new();
+
+    public ProjectionTrackingSettings ProjectionTracking { get; set; } = new();
 }
 
 public class TwitterApiSettings
@@ -46,4 +48,36 @@ public class AlertSettings
     /// appear in the app, they just don't buzz the phone.
     /// </summary>
     public bool NotifyOnRecovery { get; set; }
+}
+
+public class ProjectionTrackingSettings
+{
+    public bool Enabled { get; set; }
+
+    public string ConnectionString { get; set; } = "";
+
+    public string BaseUrl { get; set; } = "https://server.rotomonster.com";
+
+    public string ApiKey { get; set; } = "";
+
+    public int SportId { get; set; } = 1;
+
+    public int ApiSourceSetupId { get; set; } = 3;
+
+    /// <summary>The pseudo-team holding free agents, skipped on sync.</summary>
+    public int ExcludeTeamId { get; set; } = 34;
+
+    /// <summary>Local hour the nightly run is allowed to start.</summary>
+    public int RunAtHour { get; set; } = 3;
+
+    public List<ProjectionPass> Passes { get; set; } = new();
+}
+
+public class ProjectionPass
+{
+    public string FunctionName { get; set; } = "";
+
+    public string ReviewFunctionName { get; set; } = "";
+
+    public List<int> IgnorePlayerIds { get; set; } = new();
 }
