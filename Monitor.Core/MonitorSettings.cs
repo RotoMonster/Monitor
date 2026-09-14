@@ -67,8 +67,15 @@ public class ProjectionTrackingSettings
     /// <summary>The pseudo-team holding free agents, skipped on sync.</summary>
     public int ExcludeTeamId { get; set; } = 34;
 
+    /// <summary>How long a single pass is allowed to take.</summary>
+    public int TimeoutMinutes { get; set; } = 20;
+
     /// <summary>Local hour the nightly run is allowed to start.</summary>
     public int RunAtHour { get; set; } = 3;
+
+    /// <summary>Status titles treated as injured when IgnoreInjured is set.</summary>
+    public List<string> InjuryStatusTitles { get; set; } = new()
+        { "Injured", "Out", "Out for season", "Doubtful" };
 
     public List<ProjectionPass> Passes { get; set; } = new();
 }
@@ -80,4 +87,13 @@ public class ProjectionPass
     public string ReviewFunctionName { get; set; } = "";
 
     public List<int> IgnorePlayerIds { get; set; } = new();
+
+    /// <summary>
+    /// Adds every player with an active injury status to the ignore list, so the
+    /// pass only sees players we believe are healthy.
+    /// </summary>
+    public bool IgnoreInjured { get; set; }
+
+    /// <summary>Only sends players who have an injury note.</summary>
+    public bool InjuredOnly { get; set; }
 }
