@@ -8,3 +8,4 @@ monitor-*.sh
 MonitorNBA/appsettings.local.json
 monitor-state.json
 **/monitor-state.json
+MonitorNFL/appsettings.local.json

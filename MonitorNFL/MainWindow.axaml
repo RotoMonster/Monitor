@@ -1,0 +1,83 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MonitorNFL.ViewModels"
+        x:Class="MonitorNFL.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Title="MonitorNFL"
+        Width="900" Height="640"
+        MinWidth="700" MinHeight="480">
+
+  <DockPanel Margin="16">
+
+    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="12"
+                Margin="0,0,0,16">
+      <TextBlock Text="MonitorNFL" FontSize="22" FontWeight="SemiBold"
+                 VerticalAlignment="Center" />
+      <Button Content="Run all now" Command="{Binding RunAllCommand}"
+              VerticalAlignment="Center" />
+      <TextBlock Text="{Binding StatusLine}" Opacity="0.7"
+                 VerticalAlignment="Center" />
+    </StackPanel>
+
+    <Border DockPanel.Dock="Bottom" Height="200" Margin="0,16,0,0"
+            BorderBrush="#33000000" BorderThickness="1" CornerRadius="4">
+      <DockPanel>
+        <TextBlock DockPanel.Dock="Top" Text="Activity" FontWeight="SemiBold"
+                   Margin="10,8,10,4" />
+        <ScrollViewer Margin="10,0,10,10">
+          <ItemsControl ItemsSource="{Binding Log}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="x:String">
+                <TextBlock Text="{Binding}" FontFamily="monospace" FontSize="12"
+                           Margin="0,1" TextWrapping="NoWrap" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </DockPanel>
+    </Border>
+
+    <ScrollViewer>
+      <ItemsControl ItemsSource="{Binding Rows}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:CheckRowViewModel">
+            <Border BorderBrush="#33000000" BorderThickness="1" CornerRadius="4"
+                    Padding="12" Margin="0,0,0,8"
+                    Opacity="{Binding RowOpacity}">
+              <Grid ColumnDefinitions="8,16,2*,3*,Auto,Auto">
+
+                <Border Grid.Column="0" Width="8" CornerRadius="4"
+                        Background="{Binding StatusBrush}" />
+
+                <StackPanel Grid.Column="2" Spacing="2">
+                  <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding Category}" Opacity="0.6" FontSize="12" />
+                </StackPanel>
+
+                <TextBlock Grid.Column="3" Text="{Binding MessageText}"
+                           VerticalAlignment="Center" TextWrapping="Wrap"
+                           Opacity="0.85" />
+
+                <StackPanel Grid.Column="4" Spacing="2" Margin="16,0"
+                            HorizontalAlignment="Right">
+                  <TextBlock Text="{Binding LastRunText}" FontSize="12"
+                             HorizontalAlignment="Right" />
+                  <TextBlock Text="{Binding IntervalText}" FontSize="12"
+                             Opacity="0.6" HorizontalAlignment="Right" />
+                </StackPanel>
+
+                <Button Grid.Column="5"
+                        Content="{Binding PauseButtonText}"
+                        Command="{Binding TogglePauseCommand}"
+                        VerticalAlignment="Center"
+                        MinWidth="80" />
+
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+
+  </DockPanel>
+</Window>
