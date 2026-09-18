@@ -148,6 +148,12 @@ public class MainViewModel : ViewModelBase
                 : "X";
 
             Append($"{prefix} [{e.Result.RanAt:h:mm:ss tt}] {e.Check.Name}: {e.Result.Message}");
+
+            if (!string.IsNullOrWhiteSpace(e.Result.Details) && (!e.Result.Success || e.Result.NeedsAttention))
+            {
+                foreach (var line in e.Result.Details.Split('\n').Take(15))
+                    Append("      " + line);
+            }
         });
 
         // Fire and forget - a slow alerts API must never hold up the next check.
