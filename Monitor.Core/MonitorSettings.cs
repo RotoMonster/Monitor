@@ -68,7 +68,7 @@ public class ProjectionTrackingSettings
     public int ExcludeTeamId { get; set; } = 34;
 
     /// <summary>How long a single pass is allowed to take.</summary>
-    public int TimeoutMinutes { get; set; } = 20;
+    public int TimeoutMinutes { get; set; } = 45;
 
     /// <summary>Local hour the nightly run is allowed to start.</summary>
     public int RunAtHour { get; set; } = 3;
