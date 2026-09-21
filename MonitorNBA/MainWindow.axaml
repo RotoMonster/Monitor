@@ -7,6 +7,20 @@
         Width="900" Height="640"
         MinWidth="700" MinHeight="480">
 
+  <Window.Styles>
+    <Style Selector="TextBlock.error">
+      <Setter Property="Foreground" Value="#e74c3c" />
+    </Style>
+    <Style Selector="TextBlock.attention">
+      <Setter Property="Foreground" Value="#e67e22" />
+    </Style>
+    <Style Selector="TabItem">
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="MinHeight" Value="32" />
+      <Setter Property="Padding" Value="10,4" />
+    </Style>
+  </Window.Styles>
+
   <DockPanel Margin="16">
 
     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="12"
@@ -19,22 +33,36 @@
                  VerticalAlignment="Center" />
     </StackPanel>
 
-    <Border DockPanel.Dock="Bottom" Height="200" Margin="0,16,0,0"
+    <Border DockPanel.Dock="Bottom" Height="220" Margin="0,16,0,0"
             BorderBrush="#33000000" BorderThickness="1" CornerRadius="4">
-      <DockPanel>
-        <TextBlock DockPanel.Dock="Top" Text="Activity" FontWeight="SemiBold"
-                   Margin="10,8,10,4" />
-        <ScrollViewer Margin="10,0,10,10">
-          <ItemsControl ItemsSource="{Binding Log}">
-            <ItemsControl.ItemTemplate>
-              <DataTemplate x:DataType="x:String">
-                <TextBlock Text="{Binding}" FontFamily="monospace" FontSize="12"
-                           Margin="0,1" TextWrapping="NoWrap" />
-              </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ItemsControl>
-        </ScrollViewer>
-      </DockPanel>
+      <TabControl Padding="0">
+        <TabItem Header="All activity">
+          <ScrollViewer Margin="10,4,10,10">
+            <ItemsControl ItemsSource="{Binding Log}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:LogEntry">
+                  <TextBlock Text="{Binding Text}" FontFamily="monospace" FontSize="12"
+                             Margin="0,1" TextWrapping="NoWrap"
+                             Classes.error="{Binding IsError}"
+                             Classes.attention="{Binding IsAttention}" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="{Binding ErrorTabHeader}">
+          <ScrollViewer Margin="10,4,10,10">
+            <ItemsControl ItemsSource="{Binding ErrorLog}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:LogEntry">
+                  <TextBlock Text="{Binding Text}" FontFamily="monospace" FontSize="12"
+                             Margin="0,1" TextWrapping="NoWrap" Classes="error" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </TabItem>
+      </TabControl>
     </Border>
 
     <ScrollViewer>

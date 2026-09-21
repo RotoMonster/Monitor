@@ -75,7 +75,13 @@ public class MainViewModel : ViewModelBase
 
     public ObservableCollection<CheckRowViewModel> Rows { get; }
 
-    public ObservableCollection<string> Log { get; } = new();
+    public ObservableCollection<LogEntry> Log { get; } = new();
+
+    public ObservableCollection<LogEntry> ErrorLog { get; } = new();
+
+    private int _errorCount;
+
+    public string ErrorTabHeader => _errorCount == 0 ? "Errors" : $"Errors ({_errorCount})";
 
     public RelayCommand RunAllCommand { get; }
 
@@ -154,17 +160,22 @@ public class MainViewModel : ViewModelBase
             var row = Rows.FirstOrDefault(r => r.Check == e.Check);
             row?.Refresh();
 
-            var prefix = e.Result.Success
-                ? (e.Result.NeedsAttention ? "!" : " ")
-                : "X";
+            var level = !e.Result.Success
+                ? LogLevel.Error
+                : (e.Result.NeedsAttention ? LogLevel.Attention : LogLevel.Info);
 
-            Append($"{prefix} [{e.Result.RanAt:h:mm:ss tt}] {e.Check.Name}: {e.Result.Message}");
+            var prefix = level == LogLevel.Error ? "X" : (level == LogLevel.Attention ? "!" : " ");
 
-            if (!string.IsNullOrWhiteSpace(e.Result.Details) && (!e.Result.Success || e.Result.NeedsAttention))
+            var lines = new List<string> { $"{prefix} [{e.Result.RanAt:h:mm:ss tt}] {e.Check.Name}: {e.Result.Message}" };
+
+            if (level != LogLevel.Info && !string.IsNullOrWhiteSpace(e.Result.Details))
             {
                 foreach (var line in e.Result.Details.Split('\n').Take(15))
-                    Append("      " + line);
+                    lines.Add("      " + line.TrimEnd());
             }
+
+            for (var i = lines.Count - 1; i >= 0; i--)
+                Append(lines[i], level);
         });
 
         if (_notifier != null)
@@ -173,13 +184,27 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    private void Append(string line)
+    private void Append(string line, LogLevel level = LogLevel.Info)
     {
-        Log.Insert(0, line);
+        var entry = new LogEntry(line, level);
+        Log.Insert(0, entry);
 
         while (Log.Count > 500)
         {
             Log.RemoveAt(Log.Count - 1);
+        }
+
+        if (level == LogLevel.Error)
+        {
+            if (!line.StartsWith("      ")) _errorCount++;
+            ErrorLog.Insert(0, entry);
+
+            while (ErrorLog.Count > 300)
+            {
+                ErrorLog.RemoveAt(ErrorLog.Count - 1);
+            }
+
+            Raise(nameof(ErrorTabHeader));
         }
     }
 }
