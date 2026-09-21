@@ -8,10 +8,10 @@
         MinWidth="700" MinHeight="480">
 
   <Window.Styles>
-    <Style Selector="TextBlock.error">
+    <Style Selector="SelectableTextBlock.error">
       <Setter Property="Foreground" Value="#e74c3c" />
     </Style>
-    <Style Selector="TextBlock.attention">
+    <Style Selector="SelectableTextBlock.attention">
       <Setter Property="Foreground" Value="#e67e22" />
     </Style>
     <Style Selector="TabItem">
@@ -41,7 +41,7 @@
             <ItemsControl ItemsSource="{Binding Log}">
               <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="vm:LogEntry">
-                  <TextBlock Text="{Binding Text}" FontFamily="monospace" FontSize="12"
+                  <SelectableTextBlock Text="{Binding Text}" FontFamily="monospace" FontSize="12"
                              Margin="0,1" TextWrapping="NoWrap"
                              Classes.error="{Binding IsError}"
                              Classes.attention="{Binding IsAttention}" />
@@ -55,7 +55,7 @@
             <ItemsControl ItemsSource="{Binding ErrorLog}">
               <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="vm:LogEntry">
-                  <TextBlock Text="{Binding Text}" FontFamily="monospace" FontSize="12"
+                  <SelectableTextBlock Text="{Binding Text}" FontFamily="monospace" FontSize="12"
                              Margin="0,1" TextWrapping="NoWrap" Classes="error" />
                 </DataTemplate>
               </ItemsControl.ItemTemplate>

@@ -35,7 +35,8 @@ public class MainViewModel : ViewModelBase
             new NflScheduleCheck(context),
             new NflRostersCheck(context),
             new NflBoxScoreCheck(context),
-            new NflverseCheck(context)
+            new NflverseCheck(context),
+            new NflPositionsCheck(context)
         };
 
         foreach (var check in checks)

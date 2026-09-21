@@ -8,6 +8,16 @@ namespace MonitorNFL;
 
 public class NflSettings
 {
+    public System.Collections.Generic.List<string> IgnoredMySportsFeedsIds { get; set; } = new() { "7826", "7706" };
+
+    public string BoxScoreCacheFolder { get; set; } = "";
+    public bool BoxScoreForceReload { get; set; }
+
+    public int PositionsIntervalHours { get; set; } = 24;
+    public string FanTraxLeagueId { get; set; } = "5uueprb5mqk851en";
+    public string EspnLeagueId { get; set; } = "762165865";
+    public string YahooGameKey { get; set; } = "470";
+
     public string ConnectionString { get; set; } = "";
     public string MySportsFeedsKey { get; set; } = "";
     public int Year { get; set; } = 2026;

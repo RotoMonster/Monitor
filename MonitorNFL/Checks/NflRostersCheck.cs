@@ -31,6 +31,7 @@ public class NflRostersCheck : MonitorCheck
 
         using var db = _nfl.CreateDb();
         var sync = new NFLDataSync(db);
+        foreach (var id in _nfl.Settings.IgnoredMySportsFeedsIds) sync.IgnoredProviderIds.Add(id);
 
         var result = new NFLSyncResult();
         var map = await sync.SyncPlayersAsync(_nfl.SeasonId, players.Players, result);

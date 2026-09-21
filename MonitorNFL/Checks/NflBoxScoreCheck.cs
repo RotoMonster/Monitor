@@ -71,7 +71,9 @@ public class NflBoxScoreCheck : MonitorCheck
         foreach (var day in todo.Select(g => NflContext.ToEastern(g.StartTimeUtc).Date).Distinct().OrderBy(d => d))
         {
             var feed = "gamelogs-" + day.ToString("yyyyMMdd");
-            var r = await _nfl.MySportsFeeds.GetPlayerGamesByDateAsync(_nfl.Sport, _nfl.Settings.Season, day, _nfl.LastUpdated(feed));
+            var allFinal = todo.Where(g => NflContext.ToEastern(g.StartTimeUtc).Date == day).All(g => g.IsFinished);
+            var useStored = allFinal && !_nfl.Settings.BoxScoreForceReload && _nfl.MySportsFeeds.HasStored(_nfl.Sport, _nfl.Settings.Season, day);
+            var r = await _nfl.MySportsFeeds.GetPlayerGamesByDateAsync(_nfl.Sport, _nfl.Settings.Season, day, useStored ? null : _nfl.LastUpdated(feed), useStored);
 
             if (!r.Success)
             {
@@ -89,7 +91,7 @@ public class NflBoxScoreCheck : MonitorCheck
 
             lines.AddRange(r.PlayerGames);
             _nfl.SetLastUpdated(feed, r.LastUpdatedOn);
-            log.Add($"{day:yyyy-MM-dd}: {r.PlayerGames.Count} lines");
+            log.Add($"{day:yyyy-MM-dd}: {r.PlayerGames.Count} lines" + (useStored ? " (stored file)" : " (fetched)"));
         }
 
         var stats = new NFLSyncResult();

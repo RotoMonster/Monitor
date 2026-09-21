@@ -27,7 +27,26 @@ public abstract class MonitorCheck
     /// <summary>The actual work. Throwing here is fine - the runner catches it.</summary>
     protected abstract Task<CheckResult> ExecuteAsync(CancellationToken ct);
 
+    private int _running;
+
+    public bool IsRunning => Volatile.Read(ref _running) == 1;
+
     public async Task<CheckResult> RunAsync(CancellationToken ct = default)
+    {
+        if (Interlocked.Exchange(ref _running, 1) == 1)
+            return new CheckResult { Success = true, Message = "Still running from an earlier start, skipped.", RanAt = DateTime.Now };
+
+        try
+        {
+            return await RunOnceAsync(ct);
+        }
+        finally
+        {
+            Interlocked.Exchange(ref _running, 0);
+        }
+    }
+
+    private async Task<CheckResult> RunOnceAsync(CancellationToken ct)
     {
         var stopwatch = Stopwatch.StartNew();
         CheckResult result;

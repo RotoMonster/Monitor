@@ -21,12 +21,17 @@ public class NflContext
     {
         Settings = settings;
         MySportsFeeds = new MySportsFeedsProvider(settings.MySportsFeedsKey, http);
+        MySportsFeeds.CacheFolder = string.IsNullOrWhiteSpace(settings.BoxScoreCacheFolder)
+            ? System.IO.Path.Combine(AppContext.BaseDirectory, "boxscores")
+            : settings.BoxScoreCacheFolder;
         Nflverse = new NflverseProvider(http);
+        PositionFeeds = new NflPositionFeeds(http);
     }
 
     public NflSettings Settings { get; }
     public MySportsFeedsProvider MySportsFeeds { get; }
     public NflverseProvider Nflverse { get; }
+    public NflPositionFeeds PositionFeeds { get; }
     public SportsDataSport Sport => SportsDataSport.NFL;
     public int SeasonId => NFLDataSync.SeasonIdFor(Settings.Year);
 
