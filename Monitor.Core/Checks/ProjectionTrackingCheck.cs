@@ -8,6 +8,8 @@ public class ProjectionTrackingCheck : MonitorCheck
     private readonly HttpClient _http;
     private readonly ProjectionTrackingSettings _settings;
     private DateOnly? _lastCompleted;
+    private DateOnly? _lastAttempted;
+    private static readonly string AttemptFile = Path.Combine(AppContext.BaseDirectory, "projection-tracking-last.txt");
 
     public ProjectionTrackingCheck(HttpClient http, ProjectionTrackingSettings settings)
     {
@@ -33,6 +35,13 @@ public class ProjectionTrackingCheck : MonitorCheck
 
         if (now.Hour < _settings.RunAtHour)
             return Ok($"Waiting for hour {_settings.RunAtHour}.");
+
+        _lastAttempted ??= ReadLastAttempt();
+        if (_lastAttempted == today)
+            return Ok($"Already attempted today. Next run after hour {_settings.RunAtHour} tomorrow.");
+
+        _lastAttempted = today;
+        SaveLastAttempt(today);
 
         var teams = new List<object>();
         var players = new List<object>();
@@ -172,6 +181,30 @@ WHERE sp.SeasonId = @SeasonId AND sp.TeamId <> @ExcludeTeamId;";
         return totalChanged > 0
             ? Attention($"{totalChanged} projection(s) changed for {projectionDate}.", details)
             : Ok($"No changes for {projectionDate}.", details);
+    }
+
+    private static DateOnly? ReadLastAttempt()
+    {
+        try
+        {
+            if (!File.Exists(AttemptFile)) return null;
+            return DateOnly.TryParse(File.ReadAllText(AttemptFile).Trim(), out var d) ? d : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static void SaveLastAttempt(DateOnly day)
+    {
+        try
+        {
+            File.WriteAllText(AttemptFile, day.ToString("yyyy-MM-dd"));
+        }
+        catch
+        {
+        }
     }
 
     private async Task<List<int>> LoadInjuredAsync(CancellationToken ct)
