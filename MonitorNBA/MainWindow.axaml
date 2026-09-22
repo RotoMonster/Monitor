@@ -42,7 +42,7 @@
               <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="vm:LogEntry">
                   <SelectableTextBlock Text="{Binding Text}" FontFamily="monospace" FontSize="12"
-                             Margin="0,1" TextWrapping="NoWrap"
+                             Margin="0,1" TextWrapping="Wrap"
                              Classes.error="{Binding IsError}"
                              Classes.attention="{Binding IsAttention}" />
                 </DataTemplate>
@@ -56,7 +56,7 @@
               <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="vm:LogEntry">
                   <SelectableTextBlock Text="{Binding Text}" FontFamily="monospace" FontSize="12"
-                             Margin="0,1" TextWrapping="NoWrap" Classes="error" />
+                             Margin="0,1" TextWrapping="Wrap" Classes="error" />
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
             </ItemsControl>
