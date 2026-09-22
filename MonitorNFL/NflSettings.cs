@@ -8,6 +8,11 @@ namespace MonitorNFL;
 
 public class NflSettings
 {
+    public int ReprocessHour { get; set; } = 4;
+    public int ReprocessPasses { get; set; } = 2;
+    public int ReprocessMaxAgeDays { get; set; } = 7;
+    public int ReprocessIntervalMinutes { get; set; } = 60;
+
     public System.Collections.Generic.List<string> IgnoredMySportsFeedsIds { get; set; } = new() { "7826", "7706" };
 
     public string BoxScoreCacheFolder { get; set; } = "";

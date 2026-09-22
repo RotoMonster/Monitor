@@ -10,3 +10,4 @@ monitor-state.json
 **/monitor-state.json
 MonitorNFL/appsettings.local.json
 **/projection-tracking-last.txt
+**/nfl-reprocess-today.txt
