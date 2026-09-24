@@ -40,6 +40,11 @@ public class MainViewModel : ViewModelBase
             checks.Add(new ProjectionTrackingCheck(http, settings.ProjectionTracking));
         }
 
+        if (settings.AdvancedOwnership.Enabled)
+        {
+            checks.Add(new AdvancedOwnershipCheck(settings.AdvancedOwnership));
+        }
+
         // Restore anything that was paused when we last shut down.
         foreach (var check in checks)
         {

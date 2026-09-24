@@ -7,6 +7,8 @@ public class MonitorSettings
     public AlertSettings Alerts { get; set; } = new();
 
     public ProjectionTrackingSettings ProjectionTracking { get; set; } = new();
+
+    public AdvancedOwnershipSettings AdvancedOwnership { get; set; } = new();
 }
 
 public class TwitterApiSettings
@@ -96,4 +98,23 @@ public class ProjectionPass
 
     /// <summary>Only sends players who have an injury note.</summary>
     public bool InjuredOnly { get; set; }
+}
+
+public class AdvancedOwnershipSettings
+{
+    public bool Enabled { get; set; }
+
+    public string BaseUrl { get; set; } = "https://basketballmonster.com";
+
+    public string ApiKey { get; set; } = "";
+
+    public string CategoriesCode { get; set; } = "1p6:2p6:3p0.1:4p0.1:5p4:6p0.04:7p0.5:12p-2:29p-1:31p6:32p2:33p6";
+
+    public int LeagueCount { get; set; } = 100;
+
+    public int PauseSeconds { get; set; } = 3;
+
+    public int IntervalMinutes { get; set; } = 60;
+
+    public int TimeoutMinutes { get; set; } = 30;
 }
