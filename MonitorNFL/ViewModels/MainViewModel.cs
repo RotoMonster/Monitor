@@ -1,3 +1,4 @@
+using Monitor.Core.Checks;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -39,6 +40,12 @@ public class MainViewModel : ViewModelBase
             new NflverseCheck(context),
             new NflPositionsCheck(context)
         };
+
+        if (settings.AdvancedOwnership.Enabled)
+        {
+            checks.Add(new AdvancedOwnershipCheck(settings.AdvancedOwnership));
+        }
+
 
         foreach (var check in checks)
         {
