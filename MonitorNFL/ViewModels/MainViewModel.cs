@@ -35,6 +35,7 @@ public class MainViewModel : ViewModelBase
         {
             new NflScheduleCheck(context),
             new NflRostersCheck(context),
+            new NflInjuriesCheck(context),
             new NflBoxScoreCheck(context),
             new NflReprocessCheck(context),
             new NflverseCheck(context),

@@ -8,6 +8,8 @@ namespace MonitorNFL;
 
 public class NflSettings
 {
+    public int InjuriesIntervalMinutes { get; set; } = 60;
+
     public int ReprocessHour { get; set; } = 4;
     public int ReprocessPasses { get; set; } = 2;
     public int ReprocessMaxAgeDays { get; set; } = 7;
