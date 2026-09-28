@@ -4,6 +4,7 @@
         x:Class="MonitorNBA.MainWindow"
         x:DataType="vm:MainViewModel"
         Title="MonitorNBA"
+        Icon="/Assets/icon.png"
         Width="900" Height="640"
         MinWidth="700" MinHeight="480">
 
@@ -25,6 +26,7 @@
 
     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="12"
                 Margin="0,0,0,16">
+      <Image Source="/Assets/icon.png" Width="28" Height="28" VerticalAlignment="Center" />
       <TextBlock Text="MonitorNBA" FontSize="22" FontWeight="SemiBold"
                  VerticalAlignment="Center" />
       <Button Content="Run all now" Command="{Binding RunAllCommand}"
