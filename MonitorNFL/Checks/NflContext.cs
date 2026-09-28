@@ -17,6 +17,8 @@ public class NflContext
 
     private readonly Dictionary<string, string?> _lastUpdated = new();
 
+    public readonly SemaphoreSlim StatsWriteLock = new(1, 1);
+
     public NflContext(NflSettings settings, HttpClient http)
     {
         Settings = settings;

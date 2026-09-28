@@ -65,6 +65,9 @@ public class NflReprocessCheck : MonitorCheck
         var passes = Math.Max(0, settings.ReprocessPasses);
         var seasonId = _nfl.SeasonId;
 
+        await _nfl.StatsWriteLock.WaitAsync(ct);
+        try
+        {
         using var db = _nfl.CreateDb();
 
         var candidates = await db.Set<Game>().AsNoTracking()
@@ -141,5 +144,10 @@ public class NflReprocessCheck : MonitorCheck
             return Attention(message + $" Feed refused {string.Join(", ", failedDays)}, will retry.", details);
 
         return Ok(message, details);
+        }
+        finally
+        {
+            _nfl.StatsWriteLock.Release();
+        }
     }
 }

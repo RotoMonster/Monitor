@@ -28,6 +28,9 @@ public class NflBoxScoreCheck : MonitorCheck
 
     protected override async Task<CheckResult> ExecuteAsync(CancellationToken ct)
     {
+        await _nfl.StatsWriteLock.WaitAsync(ct);
+        try
+        {
         using var db = _nfl.CreateDb();
         var seasonId = _nfl.SeasonId;
         var now = NflContext.NowEastern();
@@ -111,5 +114,10 @@ public class NflBoxScoreCheck : MonitorCheck
             return Attention(message + $" Feed refused {string.Join(", ", failedDays)}, nflverse will fill it.", details);
 
         return Ok(message, details);
+        }
+        finally
+        {
+            _nfl.StatsWriteLock.Release();
+        }
     }
 }
