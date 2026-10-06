@@ -36,7 +36,7 @@ public class NflBoxScoreCheck : MonitorCheck
         var now = NflContext.NowEastern();
 
         var pending = await db.Set<Game>().AsNoTracking()
-            .Where(g => g.SeasonId == seasonId && g.GameTime <= now
+            .Where(g => g.SeasonId == seasonId && g.GameTime <= DateTime.UtcNow
                         && (!g.IsFinished || !db.Set<NFLOffensiveGame>().Any(o => o.GameId == g.Id)))
             .Select(g => g.Id)
             .ToListAsync(ct);
@@ -45,6 +45,9 @@ public class NflBoxScoreCheck : MonitorCheck
 
         var games = await _nfl.MySportsFeeds.GetGamesAsync(_nfl.Sport, _nfl.Settings.Season, null);
         if (!games.Success) return Failed("Games feed failed.", games.ErrorMessage);
+
+        if (games.NoLiveAccess)
+            return Attention($"MySportsFeeds sent no live data for {pending.Count} game(s) in progress. The subscription may be post-game only.");
 
         var sync = new NFLDataSync(db);
         var gameResult = new NFLSyncResult();
