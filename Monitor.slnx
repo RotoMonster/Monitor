@@ -2,4 +2,5 @@
   <Project Path="Monitor.Core/Monitor.Core.csproj" />
   <Project Path="MonitorNBA/MonitorNBA.csproj" />
   <Project Path="MonitorNFL/MonitorNFL.csproj" />
+  <Project Path="MonitorNHL/MonitorNHL.csproj" />
 </Solution>

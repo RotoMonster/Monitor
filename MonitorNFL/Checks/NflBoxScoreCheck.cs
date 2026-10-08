@@ -35,26 +35,50 @@ public class NflBoxScoreCheck : MonitorCheck
         var seasonId = _nfl.SeasonId;
         var now = NflContext.NowEastern();
 
-        var pending = await db.Set<Game>().AsNoTracking()
+        var pendingGames = await db.Set<Game>().AsNoTracking()
             .Where(g => g.SeasonId == seasonId && g.GameTime <= DateTime.UtcNow
                         && (!g.IsFinished || !db.Set<NFLOffensiveGame>().Any(o => o.GameId == g.Id)))
-            .Select(g => g.Id)
+            .Select(g => new { g.Id, g.GameDate, g.IsFinished })
             .ToListAsync(ct);
+        var pending = pendingGames.Select(p => p.Id).ToList();
 
         if (pending.Count == 0) return Ok("No games in progress or missing stats.");
 
-        var games = await _nfl.MySportsFeeds.GetGamesAsync(_nfl.Sport, _nfl.Settings.Season, null);
-        if (!games.Success) return Failed("Games feed failed.", games.ErrorMessage);
+        var recentCutoff = now.Date.AddDays(-1);
+        var liveDates = pendingGames
+            .Where(p => !p.IsFinished || p.GameDate.Date >= recentCutoff)
+            .Select(p => p.GameDate.Date)
+            .Distinct()
+            .OrderBy(d => d)
+            .ToList();
 
-        if (games.NoLiveAccess)
+        var feedGames = new List<SportsDataGame>();
+        var noLiveAccess = false;
+        foreach (var date in liveDates)
+        {
+            var daily = await _nfl.MySportsFeeds.GetGamesByDateAsync(_nfl.Sport, _nfl.Settings.Season, date);
+            if (!daily.Success) return Failed("Games feed failed for " + date.ToString("M/d") + ".", daily.ErrorMessage);
+            noLiveAccess = noLiveAccess || daily.NoLiveAccess;
+            feedGames.AddRange(daily.Games);
+        }
+
+        if (pendingGames.Any(p => p.IsFinished && p.GameDate.Date < recentCutoff))
+        {
+            var seasonGames = await _nfl.MySportsFeeds.GetGamesAsync(_nfl.Sport, _nfl.Settings.Season, null);
+            if (!seasonGames.Success) return Failed("Games feed failed.", seasonGames.ErrorMessage);
+            var seen = new HashSet<string>(feedGames.Select(g => g.GameId));
+            feedGames.AddRange(seasonGames.Games.Where(g => !seen.Contains(g.GameId)));
+        }
+
+        if (noLiveAccess)
             return Attention($"MySportsFeeds sent no live data for {pending.Count} game(s) in progress. The subscription may be post-game only.");
 
         var sync = new NFLDataSync(db);
         var gameResult = new NFLSyncResult();
-        var gameMap = await sync.SyncGamesAsync(seasonId, games.Games, gameResult);
+        var gameMap = await sync.SyncGamesAsync(seasonId, feedGames, gameResult);
 
         var pendingSet = new HashSet<int>(pending);
-        var todo = games.Games
+        var todo = feedGames
             .Where(g => gameMap.ContainsKey(g.GameId) && pendingSet.Contains(gameMap[g.GameId].Id))
             .ToList();
 
