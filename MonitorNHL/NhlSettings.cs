@@ -16,4 +16,7 @@ public class NhlSettings
     public int ReprocessPasses { get; set; } = 2;
     public int ReprocessMaxAgeDays { get; set; } = 7;
     public int ReprocessIntervalMinutes { get; set; } = 60;
+    public int PositionsIntervalHours { get; set; } = 24;
+    public string FanTraxLeagueId { get; set; } = "";
+    public string YahooGameKey { get; set; } = "477";
 }

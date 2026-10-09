@@ -38,7 +38,8 @@ public class MainViewModel : ViewModelBase
             new NhlInjuriesCheck(context),
             new NhlGoaliesCheck(context),
             new NhlBoxScoreCheck(context),
-            new NhlReprocessCheck(context)
+            new NhlReprocessCheck(context),
+            new NhlPositionsCheck(context)
         };
 
         if (settings.AdvancedOwnership.Enabled)
