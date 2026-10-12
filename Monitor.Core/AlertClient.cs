@@ -49,7 +49,8 @@ public class AlertClient
                 title,
                 body,
                 url,
-                notify
+                notify,
+                staffOnly = _settings.StaffOnly
             });
 
             using var response = await _http.SendAsync(request, ct);

@@ -50,6 +50,8 @@ public class AlertSettings
     /// appear in the app, they just don't buzz the phone.
     /// </summary>
     public bool NotifyOnRecovery { get; set; }
+
+    public bool StaffOnly { get; set; } = true;
 }
 
 public class ProjectionTrackingSettings
