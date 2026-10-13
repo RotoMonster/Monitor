@@ -62,6 +62,7 @@ public class NhlGoaliesCheck : MonitorCheck
 
             var goalieIdRows = await Query(conn, "SELECT Id FROM Positions WHERE Abbreviation = 'G'");
             int? goaliePositionId = goalieIdRows.Count > 0 ? Convert.ToInt32(goalieIdRows[0][0]) : null;
+            if (!goaliePositionId.HasValue) return Failed("No G position in Positions.");
 
             var plans = new Dictionary<int, TeamPlan>();
             foreach (var p in rosters.Players.Where(p => string.Equals(p.Position, "G", StringComparison.OrdinalIgnoreCase)))
@@ -142,7 +143,7 @@ WHERE x.rn = 1", ("@s", seasonId));
             var existingRows = await Query(conn, @"
 SELECT s.GameId, s.TeamId, s.PlayerId, s.PlayerGameStateTypeId
 FROM PlayerGameStates s JOIN Games g ON g.Id = s.GameId
-WHERE g.SeasonId = @s", ("@s", seasonId));
+WHERE g.SeasonId = @s AND s.PositionId = @gpos", ("@s", seasonId), ("@gpos", goaliePositionId.Value));
             var existing = new Dictionary<(int Game, int Team), List<(int Player, int Type)>>();
             foreach (var r in existingRows)
             {
@@ -151,6 +152,9 @@ WHERE g.SeasonId = @s", ("@s", seasonId));
                 list.Add((Convert.ToInt32(r[2]), Convert.ToInt32(r[3])));
             }
 
+            var msfGoalies = new HashSet<(int, int)>();
+            foreach (var r in await Query(conn, "SELECT s.GameId, s.TeamId FROM PlayerGameStates s JOIN Games g ON g.Id = s.GameId WHERE g.SeasonId = @s AND s.PositionId = @gpos AND s.Details LIKE 'MySportsFeeds%'", ("@s", seasonId), ("@gpos", goaliePositionId.Value)))
+                msfGoalies.Add((Convert.ToInt32(r[0]), Convert.ToInt32(r[1])));
             int probableWritten = 0, confirmedWritten = 0, unchanged = 0;
             var notes = new List<string>();
 
@@ -163,8 +167,8 @@ WHERE g.SeasonId = @s AND gg.Started = 1", ("@s", seasonId));
                 int gameId = Convert.ToInt32(r[0]), teamId = Convert.ToInt32(r[1]), playerId = Convert.ToInt32(r[2]);
                 existing.TryGetValue((gameId, teamId), out var rows);
                 if (rows != null && rows.Count == 1 && rows[0] == (playerId, ConfirmedTypeId)) { unchanged++; continue; }
-                await Exec(conn, "DELETE FROM PlayerGameStates WHERE GameId = @g AND TeamId = @t",
-                    ("@g", gameId), ("@t", teamId));
+                await Exec(conn, "DELETE FROM PlayerGameStates WHERE GameId = @g AND TeamId = @t AND PositionId = @gpos",
+                    ("@g", gameId), ("@t", teamId), ("@gpos", goaliePositionId.Value));
                 await Exec(conn, @"INSERT INTO PlayerGameStates (GameId, PlayerId, TeamId, PositionId, PlayerGameStateTypeId, DateAdded, Details, IsProbableStarter)
 VALUES (@g, @p, @t, @pos, @type, @now, @d, NULL)",
                     ("@g", gameId), ("@p", playerId), ("@t", teamId), ("@pos", (object?)goaliePositionId ?? DBNull.Value),
@@ -212,12 +216,13 @@ VALUES (@g, @p, @t, @pos, @type, @now, @d, NULL)",
                     }
                     previousStarter = pick;
 
+                    if (msfGoalies.Contains((game.Id, plan.TeamId))) { unchanged++; continue; }
                     existing.TryGetValue((game.Id, plan.TeamId), out var rows);
                     if (rows != null && rows.Any(x => x.Type == ConfirmedTypeId)) { unchanged++; continue; }
                     if (rows != null && rows.Count == 1 && rows[0] == (pick, ProbableTypeId)) { unchanged++; continue; }
 
-                    await Exec(conn, "DELETE FROM PlayerGameStates WHERE GameId = @g AND TeamId = @t AND PlayerGameStateTypeId = @type",
-                        ("@g", game.Id), ("@t", plan.TeamId), ("@type", ProbableTypeId));
+                    await Exec(conn, "DELETE FROM PlayerGameStates WHERE GameId = @g AND TeamId = @t AND PlayerGameStateTypeId = @type AND PositionId = @gpos",
+                        ("@g", game.Id), ("@t", plan.TeamId), ("@type", ProbableTypeId), ("@gpos", goaliePositionId.Value));
                     await Exec(conn, @"INSERT INTO PlayerGameStates (GameId, PlayerId, TeamId, PositionId, PlayerGameStateTypeId, DateAdded, Details, IsProbableStarter)
 VALUES (@g, @p, @t, @pos, @type, @now, @d, 1)",
                         ("@g", game.Id), ("@p", pick), ("@t", plan.TeamId), ("@pos", (object?)goaliePositionId ?? DBNull.Value),

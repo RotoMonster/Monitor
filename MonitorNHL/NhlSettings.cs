@@ -9,6 +9,11 @@ public class NhlSettings
     public int InjuriesIntervalMinutes { get; set; } = 60;
     public int GoaliesIntervalMinutes { get; set; } = 60;
     public int GoalieDaysAhead { get; set; } = 14;
+    public string MySportsFeedsKey { get; set; } = "";
+    public int LinesIntervalMinutes { get; set; } = 15;
+    public int LinesDaysAhead { get; set; } = 1;
+    public string JsonOddsKey { get; set; } = "";
+    public int OddsIntervalMinutes { get; set; } = 30;
     public double GoalieStarterShare { get; set; } = 0.62;
     public int BoxScoreIntervalSeconds { get; set; } = 60;
     public int BoxScoreMaxDaysPerRun { get; set; } = 5;
