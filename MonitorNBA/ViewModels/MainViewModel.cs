@@ -35,6 +35,11 @@ public class MainViewModel : ViewModelBase
                 $"{settings.TwitterApi.BaseUrl.TrimEnd('/')}/health")
         };
 
+        if (!string.IsNullOrWhiteSpace(settings.TwitterApi.ProviderApiKey))
+        {
+            checks.Add(new TwitterCreditsCheck(http, settings.TwitterApi));
+        }
+
         if (settings.ProjectionTracking.Enabled)
         {
             checks.Add(new ProjectionTrackingCheck(http, settings.ProjectionTracking));

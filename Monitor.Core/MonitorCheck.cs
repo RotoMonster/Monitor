@@ -17,6 +17,8 @@ public abstract class MonitorCheck
 
     public bool IsEnabled { get; set; } = true;
 
+    public int FailuresBeforeAlert { get; set; } = 1;
+
     public DateTime? LastRun { get; private set; }
 
     public CheckResult? LastResult { get; private set; }

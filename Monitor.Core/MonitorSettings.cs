@@ -21,6 +21,16 @@ public class TwitterApiSettings
 
     public int IntervalMinutes { get; set; } = 10;
 
+    public int FailuresBeforeAlert { get; set; } = 3;
+
+    public string ProviderApiKey { get; set; } = "";
+
+    public string ProviderInfoUrl { get; set; } = "https://api.twitterapi.io/oapi/my/info";
+
+    public double CreditsAlertBelowDollars { get; set; } = 5;
+
+    public int CreditsIntervalMinutes { get; set; } = 60;
+
     /// <summary>
     /// When set above zero, this wins over IntervalMinutes. For in-season
     /// pulls that need to run faster than once a minute.

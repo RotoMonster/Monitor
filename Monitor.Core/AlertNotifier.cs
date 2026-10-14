@@ -18,6 +18,7 @@ public class AlertNotifier
     private readonly MonitorStateStore? _store;
     private readonly MonitorState _state;
     private readonly Dictionary<string, CheckState> _lastState = new();
+    private readonly Dictionary<string, int> _failuresInARow = new();
 
     public AlertNotifier(
         AlertClient client,
@@ -55,6 +56,17 @@ public class AlertNotifier
 
         var current = StateOf(result);
         var previous = _lastState.TryGetValue(check.Name, out var known) ? known : CheckState.Unknown;
+
+        if (current == CheckState.Failed)
+        {
+            var inARow = (_failuresInARow.TryGetValue(check.Name, out var n) ? n : 0) + 1;
+            _failuresInARow[check.Name] = inARow;
+            if (previous != CheckState.Failed && inARow < check.FailuresBeforeAlert) return;
+        }
+        else
+        {
+            _failuresInARow[check.Name] = 0;
+        }
 
         if (current == previous) return;
 

@@ -22,6 +22,7 @@ public class TwitterIngestCheck : MonitorCheck
         _http = http;
         _settings = settings;
         Interval = settings.Interval;
+        FailuresBeforeAlert = Math.Max(1, settings.FailuresBeforeAlert);
     }
 
     public override string Name => "Twitter ingest";
