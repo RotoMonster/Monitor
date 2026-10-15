@@ -42,6 +42,16 @@ public class MainViewModel : ViewModelBase
             new NflPositionsCheck(context)
         };
 
+        if (!string.IsNullOrWhiteSpace(nfl.MySportsFeedsKey))
+        {
+            checks.Add(new NflLinesCheck(context));
+        }
+
+        if (!string.IsNullOrWhiteSpace(nfl.JsonOddsKey))
+        {
+            checks.Add(new NflOddsCheck(context));
+        }
+
         if (settings.AdvancedOwnership.Enabled)
         {
             checks.Add(new AdvancedOwnershipCheck(settings.AdvancedOwnership));

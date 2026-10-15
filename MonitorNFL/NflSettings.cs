@@ -34,4 +34,8 @@ public class NflSettings
     public int BoxScoreIntervalSeconds { get; set; } = 60;
     public int NflverseIntervalHours { get; set; } = 24;
     public int NflverseWeeksBack { get; set; } = 2;
+    public int LinesIntervalMinutes { get; set; } = 30;
+    public int LinesDaysAhead { get; set; } = 6;
+    public string JsonOddsKey { get; set; } = "";
+    public int OddsIntervalMinutes { get; set; } = 60;
 }

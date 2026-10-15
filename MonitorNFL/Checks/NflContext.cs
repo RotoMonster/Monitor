@@ -22,6 +22,7 @@ public class NflContext
     public NflContext(NflSettings settings, HttpClient http)
     {
         Settings = settings;
+        Http = http;
         MySportsFeeds = new MySportsFeedsProvider(settings.MySportsFeedsKey, http);
         MySportsFeeds.CacheFolder = string.IsNullOrWhiteSpace(settings.BoxScoreCacheFolder)
             ? System.IO.Path.Combine(AppContext.BaseDirectory, "boxscores")
@@ -31,6 +32,7 @@ public class NflContext
     }
 
     public NflSettings Settings { get; }
+    public HttpClient Http { get; }
     public MySportsFeedsProvider MySportsFeeds { get; }
     public NflverseProvider Nflverse { get; }
     public NflPositionFeeds PositionFeeds { get; }
