@@ -53,6 +53,7 @@ public class AlertNotifier
     public async Task OnCheckCompletedAsync(MonitorCheck check, CheckResult result, CancellationToken ct = default)
     {
         if (!_client.IsConfigured) return;
+        if (result.Message != null && result.Message.StartsWith("Still running from an earlier start")) return;
 
         var current = StateOf(result);
         var previous = _lastState.TryGetValue(check.Name, out var known) ? known : CheckState.Unknown;

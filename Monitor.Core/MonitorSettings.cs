@@ -171,4 +171,12 @@ public class ReturnDateSettings
     public int MaxPerRun { get; set; } = 20;
 
     public int MinConfidence { get; set; } = 1;
+
+    public bool NightlyRefresh { get; set; } = true;
+
+    public int RefreshAtHour { get; set; } = 3;
+
+    public int MaxNightly { get; set; } = 300;
+
+    public bool AlertChanges { get; set; } = true;
 }

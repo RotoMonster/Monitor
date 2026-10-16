@@ -61,7 +61,7 @@ public class MainViewModel : ViewModelBase
 
         if (settings.ReturnDates.Enabled && !string.IsNullOrWhiteSpace(nfl.ConnectionString))
         {
-            checks.Add(new ReturnDateEstimateCheck(settings.ReturnDates, nfl.ConnectionString, "NFL"));
+            checks.Add(new ReturnDateEstimateCheck(settings.ReturnDates, nfl.ConnectionString, "NFL", new AlertClient(http, settings.Alerts)));
         }
 
         if (settings.AdvancedOwnership.Enabled)
