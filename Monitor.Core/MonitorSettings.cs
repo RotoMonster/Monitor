@@ -9,6 +9,10 @@ public class MonitorSettings
     public ProjectionTrackingSettings ProjectionTracking { get; set; } = new();
 
     public AdvancedOwnershipSettings AdvancedOwnership { get; set; } = new();
+
+    public IndexMaintenanceSettings IndexMaintenance { get; set; } = new();
+
+    public ReturnDateSettings ReturnDates { get; set; } = new();
 }
 
 public class TwitterApiSettings
@@ -129,4 +133,42 @@ public class AdvancedOwnershipSettings
     public int IntervalMinutes { get; set; } = 60;
 
     public int TimeoutMinutes { get; set; } = 30;
+}
+
+public class IndexMaintenanceSettings
+{
+    public bool Enabled { get; set; }
+
+    public List<string> ConnectionStrings { get; set; } = new();
+
+    public int RunAtHour { get; set; } = 4;
+
+    public int RunUntilHour { get; set; } = 6;
+
+    public double ReorganizeAbove { get; set; } = 5;
+
+    public double RebuildAbove { get; set; } = 30;
+
+    public int MinPageCount { get; set; } = 1000;
+
+    public int MaxMinutes { get; set; } = 60;
+}
+
+public class ReturnDateSettings
+{
+    public bool Enabled { get; set; }
+
+    public string BaseUrl { get; set; } = "https://server.rotomonster.com";
+
+    public string ApiKey { get; set; } = "";
+
+    public int ApiSourceSetupId { get; set; } = 1;
+
+    public string FunctionName { get; set; } = "GetEstimatedReturnDate";
+
+    public int IntervalMinutes { get; set; } = 60;
+
+    public int MaxPerRun { get; set; } = 20;
+
+    public int MinConfidence { get; set; } = 1;
 }

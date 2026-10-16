@@ -52,6 +52,18 @@ public class MainViewModel : ViewModelBase
             checks.Add(new NhlOddsCheck(context));
         }
 
+        if (settings.IndexMaintenance.Enabled)
+        {
+            var dbs = settings.IndexMaintenance.ConnectionStrings.Where(c => !string.IsNullOrWhiteSpace(c)).ToList();
+            if (dbs.Count == 0 && !string.IsNullOrWhiteSpace(nfl.ConnectionString)) dbs.Add(nfl.ConnectionString);
+            if (dbs.Count > 0) checks.Add(new IndexMaintenanceCheck(settings.IndexMaintenance, dbs));
+        }
+
+        if (settings.ReturnDates.Enabled && !string.IsNullOrWhiteSpace(nfl.ConnectionString))
+        {
+            checks.Add(new ReturnDateEstimateCheck(settings.ReturnDates, nfl.ConnectionString, "NHL"));
+        }
+
         if (settings.AdvancedOwnership.Enabled)
         {
             checks.Add(new AdvancedOwnershipCheck(settings.AdvancedOwnership));

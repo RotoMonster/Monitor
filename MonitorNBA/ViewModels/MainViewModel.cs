@@ -45,6 +45,12 @@ public class MainViewModel : ViewModelBase
             checks.Add(new ProjectionTrackingCheck(http, settings.ProjectionTracking));
         }
 
+        if (settings.IndexMaintenance.Enabled)
+        {
+            var dbs = settings.IndexMaintenance.ConnectionStrings.Where(c => !string.IsNullOrWhiteSpace(c)).ToList();
+            if (dbs.Count > 0) checks.Add(new IndexMaintenanceCheck(settings.IndexMaintenance, dbs));
+        }
+
         if (settings.AdvancedOwnership.Enabled)
         {
             checks.Add(new AdvancedOwnershipCheck(settings.AdvancedOwnership));
