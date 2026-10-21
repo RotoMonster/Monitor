@@ -15,6 +15,7 @@ public class MainViewModel : ViewModelBase
 {
     private readonly CheckRunner _runner;
     private readonly AlertNotifier? _notifier;
+    private readonly SeqLogger? _seq;
     private readonly MonitorStateStore _stateStore = MonitorStateStore.Default();
     private readonly MonitorState _state;
     private readonly CancellationTokenSource _cts = new();
@@ -65,6 +66,14 @@ public class MainViewModel : ViewModelBase
 
         _runner = new CheckRunner(checks);
         _runner.CheckCompleted += OnCheckCompleted;
+
+        if (settings.Seq.Enabled)
+        {
+            var app = string.IsNullOrWhiteSpace(settings.Seq.App)
+                ? (System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name ?? "Monitor")
+                : settings.Seq.App;
+            _seq = new SeqLogger(http, settings.Seq, app);
+        }
 
         var alertClient = new AlertClient(http, settings.Alerts);
 
@@ -119,6 +128,7 @@ public class MainViewModel : ViewModelBase
     public void Start()
     {
         Append("Monitor started.");
+        _seq?.Write("Information", "Monitor started");
 
         if (_notifier == null)
             Append("Alerts are off - no alert settings configured.");
@@ -182,6 +192,8 @@ public class MainViewModel : ViewModelBase
             for (var i = lines.Count - 1; i >= 0; i--)
                 Append(lines[i], level);
         });
+
+        _seq?.CheckCompleted(e.Check.Name, e.Result);
 
         if (_notifier != null)
         {

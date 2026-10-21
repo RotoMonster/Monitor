@@ -13,6 +13,23 @@ public class MonitorSettings
     public IndexMaintenanceSettings IndexMaintenance { get; set; } = new();
 
     public ReturnDateSettings ReturnDates { get; set; } = new();
+
+    public SeqSettings Seq { get; set; } = new();
+}
+
+public class SeqSettings
+{
+    public bool Enabled { get; set; }
+
+    public string Url { get; set; } = "http://localhost:5341";
+
+    public string ApiKey { get; set; } = "";
+
+    public string App { get; set; } = "";
+
+    public string MinimumLevel { get; set; } = "Information";
+
+    public int FlushSeconds { get; set; } = 5;
 }
 
 public class TwitterApiSettings
