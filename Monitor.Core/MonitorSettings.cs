@@ -124,7 +124,7 @@ public class AdvancedOwnershipSettings
 
     public string ApiKey { get; set; } = "";
 
-    public string CategoriesCode { get; set; } = "1p6:2p6:3p0.1:4p0.1:5p4:6p0.04:7p0.5:12p-2:29p-1:31p6:32p2:33p6";
+    public string CategoriesCode { get; set; } = "";
 
     public int LeagueCount { get; set; } = 100;
 
