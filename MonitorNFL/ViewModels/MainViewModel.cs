@@ -70,6 +70,11 @@ public class MainViewModel : ViewModelBase
             checks.Add(new AdvancedOwnershipCheck(settings.AdvancedOwnership));
         }
 
+        if (settings.LineupSnapshot.Enabled && !string.IsNullOrWhiteSpace(nfl.ConnectionString))
+        {
+            checks.Add(new LineupSnapshotCheck(nfl.ConnectionString, settings.LineupSnapshot, "NFL"));
+        }
+
 
         foreach (var check in checks)
         {

@@ -10,6 +10,8 @@ public class MonitorSettings
 
     public AdvancedOwnershipSettings AdvancedOwnership { get; set; } = new();
 
+    public LineupSnapshotSettings LineupSnapshot { get; set; } = new();
+
     public IndexMaintenanceSettings IndexMaintenance { get; set; } = new();
 
     public ReturnDateSettings ReturnDates { get; set; } = new();
@@ -196,4 +198,15 @@ public class ReturnDateSettings
     public int MaxNightly { get; set; } = 300;
 
     public bool AlertChanges { get; set; } = true;
+}
+
+public class LineupSnapshotSettings
+{
+    public bool Enabled { get; set; } = true;
+
+    public DayOfWeek Day { get; set; } = DayOfWeek.Monday;
+
+    public int RunAtHour { get; set; } = 6;
+
+    public int Days { get; set; } = 7;
 }
