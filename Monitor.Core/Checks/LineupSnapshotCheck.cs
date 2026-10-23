@@ -127,7 +127,10 @@ public class LineupSnapshotCheck : MonitorCheck
         END
         GO
 
-        CREATE OR ALTER PROCEDURE dbo.SnapshotProjectedLineups
+        IF OBJECT_ID('dbo.SnapshotProjectedLineups', 'P') IS NOT NULL DROP PROCEDURE dbo.SnapshotProjectedLineups;
+        GO
+
+        CREATE PROCEDURE dbo.SnapshotProjectedLineups
             @Days INT = 7
         AS
         BEGIN
@@ -151,7 +154,10 @@ public class LineupSnapshotCheck : MonitorCheck
         END
         GO
 
-        CREATE OR ALTER PROCEDURE dbo.ProjectedLineupAccuracy
+        IF OBJECT_ID('dbo.ProjectedLineupAccuracy', 'P') IS NOT NULL DROP PROCEDURE dbo.ProjectedLineupAccuracy;
+        GO
+
+        CREATE PROCEDURE dbo.ProjectedLineupAccuracy
             @SnapshotDate DATE = NULL
         AS
         BEGIN
