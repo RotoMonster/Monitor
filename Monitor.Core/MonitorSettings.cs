@@ -54,6 +54,10 @@ public class TwitterApiSettings
 
     public int CreditsIntervalMinutes { get; set; } = 60;
 
+    public bool XFallback { get; set; } = true;
+
+    public int XIntervalSeconds { get; set; } = 50;
+
     /// <summary>
     /// When set above zero, this wins over IntervalMinutes. For in-season
     /// pulls that need to run faster than once a minute.
