@@ -41,6 +41,11 @@ public class MainViewModel : ViewModelBase
             checks.Add(new TwitterCreditsCheck(http, settings.TwitterApi));
         }
 
+        if (!string.IsNullOrWhiteSpace(settings.TwitterApi.XBearerToken))
+        {
+            checks.Add(new XCreditsCheck(http, settings.TwitterApi));
+        }
+
         if (settings.ProjectionTracking.Enabled)
         {
             checks.Add(new ProjectionTrackingCheck(http, settings.ProjectionTracking));

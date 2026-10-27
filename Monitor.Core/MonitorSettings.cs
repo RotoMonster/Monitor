@@ -58,6 +58,12 @@ public class TwitterApiSettings
 
     public int XIntervalSeconds { get; set; } = 50;
 
+    public string XBearerToken { get; set; } = "";
+
+    public string XCreditsUrl { get; set; } = "https://api.x.com/2/usage/credits";
+
+    public double XCreditsAlertBelowDollars { get; set; } = 5;
+
     /// <summary>
     /// When set above zero, this wins over IntervalMinutes. For in-season
     /// pulls that need to run faster than once a minute.
