@@ -16,6 +16,8 @@ public class MonitorSettings
 
     public ReturnDateSettings ReturnDates { get; set; } = new();
 
+    public NbaInjuryReportSettings NbaInjuryReport { get; set; } = new();
+
     public SeqSettings Seq { get; set; } = new();
 }
 

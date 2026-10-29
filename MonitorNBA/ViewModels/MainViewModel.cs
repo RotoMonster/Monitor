@@ -57,6 +57,11 @@ public class MainViewModel : ViewModelBase
             if (dbs.Count > 0) checks.Add(new IndexMaintenanceCheck(settings.IndexMaintenance, dbs));
         }
 
+        if (settings.NbaInjuryReport.Enabled)
+        {
+            checks.Add(new NbaInjuryReportCheck(http, settings.NbaInjuryReport));
+        }
+
         if (settings.AdvancedOwnership.Enabled)
         {
             checks.Add(new AdvancedOwnershipCheck(settings.AdvancedOwnership));
