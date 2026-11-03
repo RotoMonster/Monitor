@@ -62,6 +62,12 @@ public class TwitterApiSettings
 
     public string XBearerToken { get; set; } = "";
 
+    public int SportId { get; set; }
+
+    public int PlayerIdOffset { get; set; }
+
+    public int PlayerSyncIntervalHours { get; set; } = 24;
+
     public string XCreditsUrl { get; set; } = "https://api.x.com/2/usage/credits";
 
     public double XCreditsAlertBelowDollars { get; set; } = 5;

@@ -75,6 +75,16 @@ public class MainViewModel : ViewModelBase
             checks.Add(new LineupSnapshotCheck(nfl.ConnectionString, settings.LineupSnapshot, "NFL"));
         }
 
+        if (!string.IsNullOrWhiteSpace(settings.TwitterApi.ApiKey) && settings.TwitterApi.ListId > 0)
+        {
+            checks.Add(new TwitterIngestCheck(http, settings.TwitterApi));
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.TwitterApi.ApiKey) && settings.TwitterApi.SportId > 0 && !string.IsNullOrWhiteSpace(nfl.ConnectionString))
+        {
+            checks.Add(new TwitterPlayerSyncCheck(http, settings.TwitterApi, nfl.ConnectionString, () => context.SeasonId, settings.TwitterApi.SportId, settings.TwitterApi.PlayerIdOffset, "NFL"));
+        }
+
 
         foreach (var check in checks)
         {
