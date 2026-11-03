@@ -12,6 +12,7 @@ public class NhlSettings
     public string MySportsFeedsKey { get; set; } = "";
     public int LinesIntervalMinutes { get; set; } = 15;
     public int LinesDaysAhead { get; set; } = 1;
+    public int LinesDaysBack { get; set; } = 2;
     public string JsonOddsKey { get; set; } = "";
     public int OddsIntervalMinutes { get; set; } = 30;
     public double GoalieStarterShare { get; set; } = 0.62;

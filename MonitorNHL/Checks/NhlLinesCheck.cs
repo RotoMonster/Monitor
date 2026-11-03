@@ -81,7 +81,8 @@ public class NhlLinesCheck : MonitorCheck
         if (string.IsNullOrWhiteSpace(key)) return Failed("Nhl:MySportsFeedsKey is not set.");
 
         var today = NhlContext.NowEastern().Date;
-        var days = Enumerable.Range(0, Math.Max(0, _nhl.Settings.LinesDaysAhead) + 1).Select(i => today.AddDays(i)).ToList();
+        var back = Math.Max(0, _nhl.Settings.LinesDaysBack);
+        var days = Enumerable.Range(-back, back + Math.Max(0, _nhl.Settings.LinesDaysAhead) + 1).Select(i => today.AddDays(i)).ToList();
 
         var msfGames = new List<MsfGame>();
         foreach (var day in days)
