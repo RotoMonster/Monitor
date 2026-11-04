@@ -163,6 +163,8 @@ public class AdvancedOwnershipSettings
 
     public string CategoriesCode { get; set; } = "";
 
+    public List<string> CategoriesCodes { get; set; } = new();
+
     public int LeagueCount { get; set; } = 100;
 
     public int PauseSeconds { get; set; } = 3;

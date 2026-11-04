@@ -7,10 +7,33 @@ public class AdvancedOwnershipCheck : MonitorCheck
 {
     private readonly AdvancedOwnershipSettings _settings;
     private readonly HttpClient _http;
+    private readonly string _code;
+    private readonly bool _namedByCode;
+
+    public static List<AdvancedOwnershipCheck> CreateAll(AdvancedOwnershipSettings settings)
+    {
+        var codes = settings.CategoriesCodes
+            .Where(c => !string.IsNullOrWhiteSpace(c))
+            .Select(c => c.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (codes.Count == 0)
+            return new List<AdvancedOwnershipCheck> { new AdvancedOwnershipCheck(settings) };
+
+        return codes.Select(c => new AdvancedOwnershipCheck(settings, c, true)).ToList();
+    }
 
     public AdvancedOwnershipCheck(AdvancedOwnershipSettings settings)
+        : this(settings, settings.CategoriesCode, false)
+    {
+    }
+
+    public AdvancedOwnershipCheck(AdvancedOwnershipSettings settings, string code, bool namedByCode)
     {
         _settings = settings;
+        _code = code ?? "";
+        _namedByCode = namedByCode;
         _http = new HttpClient
         {
             Timeout = TimeSpan.FromMinutes(Math.Max(1, settings.TimeoutMinutes))
@@ -18,7 +41,7 @@ public class AdvancedOwnershipCheck : MonitorCheck
         Interval = TimeSpan.FromMinutes(Math.Max(15, settings.IntervalMinutes));
     }
 
-    public override string Name => "Advanced ownership";
+    public override string Name => _namedByCode ? $"Advanced ownership ({_code})" : "Advanced ownership";
 
     public override string Category => "Ownership";
 
@@ -30,7 +53,7 @@ public class AdvancedOwnershipCheck : MonitorCheck
         {
             Content = JsonContent.Create(new
             {
-                categoriesCode = _settings.CategoriesCode,
+                categoriesCode = _code,
                 leagueCount = _settings.LeagueCount,
                 pauseSeconds = _settings.PauseSeconds
             })

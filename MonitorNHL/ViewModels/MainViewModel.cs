@@ -67,7 +67,7 @@ public class MainViewModel : ViewModelBase
 
         if (settings.AdvancedOwnership.Enabled)
         {
-            checks.Add(new AdvancedOwnershipCheck(settings.AdvancedOwnership));
+            checks.AddRange(AdvancedOwnershipCheck.CreateAll(settings.AdvancedOwnership));
         }
 
         if (settings.LineupSnapshot.Enabled && !string.IsNullOrWhiteSpace(nfl.ConnectionString))

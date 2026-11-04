@@ -64,7 +64,7 @@ public class MainViewModel : ViewModelBase
 
         if (settings.AdvancedOwnership.Enabled)
         {
-            checks.Add(new AdvancedOwnershipCheck(settings.AdvancedOwnership));
+            checks.AddRange(AdvancedOwnershipCheck.CreateAll(settings.AdvancedOwnership));
         }
 
         // Restore anything that was paused when we last shut down.
