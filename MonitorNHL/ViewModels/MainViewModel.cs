@@ -76,6 +76,11 @@ public class MainViewModel : ViewModelBase
         }
 
 
+        if (settings.TwitterPlayerImport.Enabled)
+        {
+            checks.Add(new TwitterPlayerImportCheck(settings.TwitterApi, settings.TwitterPlayerImport, nfl.ConnectionString, 0));
+        }
+
         foreach (var check in checks)
         {
             if (_state.Paused.TryGetValue(check.Name, out var paused) && paused)

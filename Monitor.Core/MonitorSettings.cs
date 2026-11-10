@@ -10,6 +10,8 @@ public class MonitorSettings
 
     public AdvancedOwnershipSettings AdvancedOwnership { get; set; } = new();
 
+    public TwitterPlayerImportSettings TwitterPlayerImport { get; set; } = new();
+
     public LineupSnapshotSettings LineupSnapshot { get; set; } = new();
 
     public IndexMaintenanceSettings IndexMaintenance { get; set; } = new();
@@ -229,4 +231,21 @@ public class LineupSnapshotSettings
     public int RunAtHour { get; set; } = 6;
 
     public int Days { get; set; } = 7;
+}
+
+public class TwitterPlayerImportSettings
+{
+    public bool Enabled { get; set; }
+
+    public string ConnectionString { get; set; } = "";
+
+    public int SportId { get; set; }
+
+    public int RunAtHour { get; set; } = 4;
+
+    public int MinPlayers { get; set; } = 300;
+
+    public int MaxDropPercent { get; set; } = 25;
+
+    public bool DryRun { get; set; }
 }

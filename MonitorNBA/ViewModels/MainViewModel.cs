@@ -67,6 +67,11 @@ public class MainViewModel : ViewModelBase
             checks.AddRange(AdvancedOwnershipCheck.CreateAll(settings.AdvancedOwnership));
         }
 
+        if (settings.TwitterPlayerImport.Enabled)
+        {
+            checks.Add(new TwitterPlayerImportCheck(settings.TwitterApi, settings.TwitterPlayerImport, settings.ProjectionTracking.ConnectionString, 1));
+        }
+
         // Restore anything that was paused when we last shut down.
         foreach (var check in checks)
         {
