@@ -12,6 +12,8 @@ public class MonitorSettings
 
     public TwitterPlayerImportSettings TwitterPlayerImport { get; set; } = new();
 
+    public DailyCleanupSettings DailyCleanup { get; set; } = new();
+
     public LineupSnapshotSettings LineupSnapshot { get; set; } = new();
 
     public IndexMaintenanceSettings IndexMaintenance { get; set; } = new();
@@ -246,6 +248,19 @@ public class TwitterPlayerImportSettings
     public int MinPlayers { get; set; } = 300;
 
     public int MaxDropPercent { get; set; } = 25;
+
+    public bool DryRun { get; set; }
+}
+
+public class DailyCleanupSettings
+{
+    public bool Enabled { get; set; }
+
+    public int RunAtHour { get; set; } = 3;
+
+    public int TweetDays { get; set; } = 7;
+
+    public int TaskDays { get; set; } = 2;
 
     public bool DryRun { get; set; }
 }

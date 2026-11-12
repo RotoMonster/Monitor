@@ -86,6 +86,11 @@ public class MainViewModel : ViewModelBase
         }
 
 
+        if (settings.DailyCleanup.Enabled)
+        {
+            checks.Add(new DailyCleanupCheck(settings.TwitterApi, settings.DailyCleanup, nfl.ConnectionString, 3));
+        }
+
         if (settings.TwitterPlayerImport.Enabled)
         {
             checks.Add(new TwitterPlayerImportCheck(settings.TwitterApi, settings.TwitterPlayerImport, nfl.ConnectionString, 3));

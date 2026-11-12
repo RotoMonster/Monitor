@@ -67,6 +67,11 @@ public class MainViewModel : ViewModelBase
             checks.AddRange(AdvancedOwnershipCheck.CreateAll(settings.AdvancedOwnership));
         }
 
+        if (settings.DailyCleanup.Enabled)
+        {
+            checks.Add(new DailyCleanupCheck(settings.TwitterApi, settings.DailyCleanup, settings.ProjectionTracking.ConnectionString, 1));
+        }
+
         if (settings.TwitterPlayerImport.Enabled)
         {
             checks.Add(new TwitterPlayerImportCheck(settings.TwitterApi, settings.TwitterPlayerImport, settings.ProjectionTracking.ConnectionString, 1));
